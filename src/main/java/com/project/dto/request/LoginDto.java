@@ -1,4 +1,4 @@
-package com.project.model.dto.request;
+package com.project.dto.request;
 
 import com.project.validation.ValidEmail;
 import javax.validation.constraints.NotBlank;

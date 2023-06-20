@@ -1,10 +1,10 @@
 package com.project.controller;
 
+import com.project.dto.request.LoginDto;
+import com.project.dto.request.SignUpDto;
+import com.project.dto.response.UserResponseDto;
 import com.project.exception.EmailAlreadyRegisteredException;
 import com.project.mapper.UserMapper;
-import com.project.model.dto.request.LoginDto;
-import com.project.model.dto.request.SignUpDto;
-import com.project.model.dto.response.UserResponseDto;
 import com.project.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

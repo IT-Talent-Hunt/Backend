@@ -1,4 +1,4 @@
-package com.project.model.dto.response;
+package com.project.dto.response;
 
 import com.project.model.Role;
 import com.project.model.Speciality;

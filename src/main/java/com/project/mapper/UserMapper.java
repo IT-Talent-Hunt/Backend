@@ -1,7 +1,7 @@
 package com.project.mapper;
 
+import com.project.dto.response.UserResponseDto;
 import com.project.model.User;
-import com.project.model.dto.response.UserResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;

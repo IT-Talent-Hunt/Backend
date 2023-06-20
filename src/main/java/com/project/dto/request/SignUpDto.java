@@ -1,6 +1,7 @@
-package com.project.model.dto.request;
+package com.project.dto.request;
 
 import com.project.validation.FieldsValueMatch;
+import com.project.validation.ValidEmail;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SignUpDto {
+    @ValidEmail
     private String email;
     private String password;
     private String confirmPassword;
