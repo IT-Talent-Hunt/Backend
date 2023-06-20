@@ -2,19 +2,25 @@ package com.project.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Setter
 @Getter
 @Entity
@@ -26,12 +32,20 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private byte[] profileImage;
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
+    private String profileImage;
+    @CreatedDate
     private LocalDate registrationDate;
-    private LocalDate birthDate;
     @ElementCollection
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     private List<Role> roles = new ArrayList<>();
-    @ManyToMany
-    private Set<Speciality> specialities;
+    @ElementCollection
+    @CollectionTable(name = "specialities", joinColumns = @JoinColumn(name = "user_id"))
+    private Set<Speciality> specialities = new HashSet<>();
+
+    public enum Provider {
+        LOCAL,
+        GOOGLE
+    }
 }
