@@ -2,9 +2,12 @@ package com.project.service.impl;
 
 import com.project.dto.request.SignUpDto;
 import com.project.exception.EmailAlreadyRegisteredException;
+import com.project.exception.UserNotFoundException;
+import com.project.model.LikedCart;
 import com.project.model.Role;
 import com.project.model.User;
 import com.project.repository.UserRepository;
+import com.project.service.LikedCartService;
 import com.project.service.UserService;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final LikedCartService likedCartService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -35,8 +39,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmailFetchRoles(email)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "Couldn't find user by email " + email));
+    }
+
+    @Override
     public List<User> findAllByIdIn(List<Long> userIds) {
         return userRepository.findAllByIdIn(userIds);
+    }
+
+    @Override
+    public User update(User user) {
+        User userFromDb = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "Couldn't find user by id: " + user.getId()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (userFromDb.getRegistrationDate() != null) {
+            user.setRegistrationDate(userFromDb.getRegistrationDate());
+        }
+        user.setProvider(userFromDb.getProvider());
+        user.setRoles(userFromDb.getRoles());
+        return userRepository.save(user);
     }
 
     @Override
@@ -55,6 +80,15 @@ public class UserServiceImpl implements UserService {
         registerUser.setEmail(signUpDto.getEmail());
         registerUser.setPassword(signUpDto.getPassword());
         registerUser.setProvider(User.Provider.LOCAL);
-        return save(registerUser);
+        User savedUser = save(registerUser);
+        LikedCart likedCart = new LikedCart();
+        likedCart.setUser(savedUser);
+        likedCartService.save(likedCart);
+        return savedUser;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }

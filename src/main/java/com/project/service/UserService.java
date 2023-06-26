@@ -11,8 +11,14 @@ public interface UserService {
 
     User findById(Long id);
 
+    User findByEmail(String email);
+
     List<User> findAllByIdIn(List<Long> userIds);
+
+    User update(User user);
 
     User registerNewUser(SignUpDto signUpDto)
             throws EmailAlreadyRegisteredException, AuthenticationException;
+
+    void deleteById(Long id);
 }

@@ -1,8 +1,10 @@
 package com.project.security;
 
+import com.project.model.LikedCart;
 import com.project.model.Role;
 import com.project.model.User;
 import com.project.repository.UserRepository;
+import com.project.service.LikedCartService;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.util.StringUtils;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
+    private final LikedCartService likedCartService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oauth2UserRequest)
@@ -55,7 +58,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setLastName(oauth2UserInfo.getLastName());
         user.setEmail(oauth2UserInfo.getEmail());
         user.setProfileImage(oauth2UserInfo.getImageUrl());
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        LikedCart likedCart = new LikedCart();
+        likedCart.setUser(savedUser);
+        likedCartService.save(likedCart);
+        return savedUser;
     }
 
     private User updateExistingUser(User existingUser, GoogleOAuth2UserInfo oauth2UserInfo) {
