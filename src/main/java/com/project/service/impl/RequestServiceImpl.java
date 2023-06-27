@@ -51,7 +51,8 @@ public class RequestServiceImpl implements RequestService {
             teamService.addUser(request.getProject().getTeam(),
                     request.getUser(), request.getSpecialityName());
             if (request.getProject().getTeam().getSpecialities().size() == 0) {
-                projectService.changeStatus(request.getProject(), ProjectStatus.Status.IN_PROGRESS);
+                projectService.changeStatus(request.getProject(),
+                        ProjectStatus.Status.IN_PROGRESS.toString());
             }
         }
         return save(request);

@@ -41,8 +41,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project changeStatus(Project project, ProjectStatus.Status status) {
-        project.setProjectStatus(status);
+    public Project changeStatus(Project project, String status) {
+        project.setProjectStatus(ProjectStatus.Status.valueOf(status));
         return save(project);
     }
 }

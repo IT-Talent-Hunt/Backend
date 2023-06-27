@@ -15,5 +15,5 @@ public interface ProjectService {
 
     List<Project> findAllByIdIn(List<Long> ids);
 
-    Project changeStatus(Project project, ProjectStatus.Status status);
+    Project changeStatus(Project project, String status);
 }

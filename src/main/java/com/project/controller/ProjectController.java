@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.dto.request.ProjectRequestDto;
 import com.project.dto.response.ProjectResponseDto;
+import com.project.dto.response.RequestResponseDto;
 import com.project.mapper.ProjectMapper;
 import com.project.model.Project;
 import com.project.service.ProjectService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -49,6 +51,14 @@ public class ProjectController {
         Project project = projectMapper.dtoToModel(projectRequestDto);
         project.setId(id);
         return projectMapper.modelToDto(projectService.save(project));
+    }
+
+    @PostMapping("/change-status/{id}")
+    public ProjectResponseDto changeStatus(@PathVariable Long id,
+                                           @RequestParam String status) {
+        return projectMapper.modelToDto(
+                projectService.changeStatus(
+                        projectService.getById(id), status));
     }
 
     @DeleteMapping("/{id}")
