@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LikedCartRepository extends JpaRepository<LikedCart, Long> {
+    LikedCart getByUserId(Long id);
 }
