@@ -12,4 +12,5 @@ public interface RequestService {
 
     void deleteById(Long id);
 
+    Request changeStatus(Request request, String status);
 }

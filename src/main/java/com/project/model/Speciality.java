@@ -1,6 +1,8 @@
 package com.project.model;
 
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +10,17 @@ import lombok.Setter;
 @Setter
 @Embeddable
 public class Speciality {
+    @Enumerated(EnumType.STRING)
     private SpecialityName specialityName;
 
-    enum SpecialityName {
+    public Speciality(SpecialityName specialityName) {
+        this.specialityName = specialityName;
+    }
+
+    public Speciality() {
+    }
+
+    public enum SpecialityName {
         QA,
         BACKEND,
         FRONTEND,

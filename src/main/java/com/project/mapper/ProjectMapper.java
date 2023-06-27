@@ -23,12 +23,15 @@ public interface ProjectMapper {
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "team.id", target = "teamId")
     @Mapping(source = "projectStatus", target = "status")
+    @Mapping(source = "socialLinks", target = "socialLinks")
     ProjectResponseDto modelToDto(Project project);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "projectStatus", ignore = true)
     @Mapping(source = "ownerId", target = "owner")
-    @Mapping(source = "teamId", target = "team")
+    @Mapping(source = "requiredSpeciality", target = "team")
+    @Mapping(source = "socialLinks", target = "socialLinks")
     Project dtoToModel(ProjectRequestDto projectRequestDto);
+
 }

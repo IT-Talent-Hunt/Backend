@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class TeamRequestDto {
     private List<Long> usersIds;
-    private Long maxTeamSize;
+    private List<String> specialitiesNames;
 }

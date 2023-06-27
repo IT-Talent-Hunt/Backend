@@ -11,11 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "requests")
 public class Request {
@@ -28,7 +26,14 @@ public class Request {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    private Speciality.SpecialityName specialityName;
+
     private String message;
     @Enumerated(EnumType.STRING)
     private RequestStatus.Status status;
+
+    public Request() {
+        status = RequestStatus.Status.PENDING;
+    }
 }

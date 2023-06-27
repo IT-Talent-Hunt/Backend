@@ -9,4 +9,5 @@ import lombok.Setter;
 public class TeamResponseDto {
     private Long id;
     private List<Long> usersIds;
+    private List<String> specialitiesNames;
 }

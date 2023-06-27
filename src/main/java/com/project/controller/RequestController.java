@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -43,6 +44,14 @@ public class RequestController {
                         requestMapper.dtoToModel(requestDto)));
     }
 
+    @PostMapping("/change-status/{id}")
+    public RequestResponseDto changeStatus(@PathVariable Long id,
+                                           @RequestParam String status) {
+        return requestMapper.modelToDto(
+                requestService.changeStatus(
+                        requestService.getById(id), status));
+    }
+
     @PutMapping("/{id}")
     public RequestResponseDto updateRequest(@PathVariable Long id,
                                       @RequestBody RequestModelRequestDto requestDto) {
@@ -52,12 +61,10 @@ public class RequestController {
     }
 
     @DeleteMapping("/{id}")
-    public RequestResponseDto deleteRequest(@PathVariable Long id) {
+    public void deleteRequest(@PathVariable Long id) {
         Request request = requestService.getById(id);
         if (request != null) {
             requestService.deleteById(id);
-            return requestMapper.modelToDto(request);
         }
-        return null;
     }
 }

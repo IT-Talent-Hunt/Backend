@@ -1,7 +1,10 @@
 package com.project.model;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
@@ -28,19 +31,29 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     @Column(name = "creation_date")
     @CreatedDate
     private LocalDateTime creationDate;
+
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
-    @Column(name = "social_links")
-    private String socialLinks;
+    @ElementCollection
+    @CollectionTable(name = "social_links", joinColumns = @JoinColumn(name = "project_id"))
+    private Map<String, String> socialLinks;
     @Enumerated(EnumType.STRING)
     private ProjectStatus.Status projectStatus;
+
+    public Project() {
+        this.projectStatus = ProjectStatus.Status.RECRUITMENT;
+    }
 }

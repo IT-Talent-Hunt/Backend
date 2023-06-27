@@ -1,6 +1,7 @@
 package com.project.service.impl;
 
 import com.project.model.Project;
+import com.project.model.ProjectStatus;
 import com.project.repository.ProjectRepository;
 import com.project.service.ProjectService;
 import java.util.List;
@@ -37,5 +38,11 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<Project> findAllByIdIn(List<Long> ids) {
         return projectRepository.findAllByIdIn(ids);
+    }
+
+    @Override
+    public Project changeStatus(Project project, ProjectStatus.Status status) {
+        project.setProjectStatus(status);
+        return save(project);
     }
 }

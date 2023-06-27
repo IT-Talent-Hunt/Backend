@@ -52,12 +52,10 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ProjectResponseDto deleteProject(@PathVariable Long id) {
+    public void deleteProject(@PathVariable Long id) {
         Project team = projectService.getById(id);
         if (team != null) {
             projectService.deleteById(id);
-            return projectMapper.modelToDto(team);
         }
-        return null;
     }
 }

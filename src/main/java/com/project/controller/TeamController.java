@@ -5,6 +5,7 @@ import com.project.dto.response.TeamResponseDto;
 import com.project.mapper.TeamMapper;
 import com.project.model.Team;
 import com.project.service.TeamService;
+import com.project.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -36,6 +38,13 @@ public class TeamController {
         return teamMapper.modelToDto(teamService.getById(id));
     }
 
+    @PostMapping("/add-speciality")
+    public TeamResponseDto addRequiredSpeciality(@PathVariable Long id,
+                                                 @RequestParam String speciality) {
+        return teamMapper.modelToDto(
+                teamService.addSpeciality(teamService.getById(id), speciality));
+    }
+
     @PostMapping
     private TeamResponseDto save(@RequestBody TeamRequestDto teamRequestDto) {
         return teamMapper.modelToDto(
@@ -45,19 +54,17 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public TeamResponseDto updateTeam(@PathVariable Long id,
-                                    @RequestBody TeamRequestDto teamRequestDto) {
+                                      @RequestBody TeamRequestDto teamRequestDto) {
         Team team = teamMapper.dtoToModel(teamRequestDto);
         team.setId(id);
         return teamMapper.modelToDto(teamService.save(team));
     }
 
     @DeleteMapping("/{id}")
-    public TeamResponseDto deleteTeam(@PathVariable Long id) {
+    public void deleteTeam(@PathVariable Long id) {
         Team team = teamService.getById(id);
         if (team != null) {
             teamService.deleteById(id);
-            return teamMapper.modelToDto(team);
         }
-        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.project.service;
 
 import com.project.model.Project;
+import com.project.model.ProjectStatus;
 import java.util.List;
 
 public interface ProjectService {
@@ -14,4 +15,5 @@ public interface ProjectService {
 
     List<Project> findAllByIdIn(List<Long> ids);
 
+    Project changeStatus(Project project, ProjectStatus.Status status);
 }

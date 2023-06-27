@@ -43,21 +43,26 @@ public class LikedCartController {
                         likedCartMapper.dtoToModel(likedCartRequestDto)));
     }
 
+    @PostMapping("/add-project/{cartId}/{projectId}")
+    private LikedCartResponseDto addProject(@PathVariable Long cartId,
+                                            @PathVariable Long projectId) {
+        return likedCartMapper.modelToDto(
+                likedCartService.addProject(cartId, projectId));
+    }
+
     @PutMapping("/{id}")
-    public LikedCartResponseDto updateLikedCart(@PathVariable Long id,
-                                            @RequestBody LikedCartRequestDto likedCartRequestDto) {
+    public LikedCartResponseDto updateLikedCart(
+            @PathVariable Long id, @RequestBody LikedCartRequestDto likedCartRequestDto) {
         LikedCart likedCart = likedCartMapper.dtoToModel(likedCartRequestDto);
         likedCart.setId(id);
         return likedCartMapper.modelToDto(likedCartService.save(likedCart));
     }
 
     @DeleteMapping("/{id}")
-    public LikedCartResponseDto deleteLikedCart(@PathVariable Long id) {
+    public void deleteLikedCart(@PathVariable Long id) {
         LikedCart likedCart = likedCartService.getById(id);
         if (likedCart != null) {
             likedCartService.deleteById(id);
-            return likedCartMapper.modelToDto(likedCart);
         }
-        return null;
     }
 }

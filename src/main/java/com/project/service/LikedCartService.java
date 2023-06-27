@@ -8,6 +8,8 @@ public interface LikedCartService {
 
     List<LikedCart> getAll();
 
+    LikedCart addProject(Long likedCartId, Long projectId);
+
     LikedCart save(LikedCart likedCart);
 
     void deleteById(Long id);
