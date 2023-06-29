@@ -5,10 +5,11 @@ import com.project.dto.response.TeamResponseDto;
 import com.project.mapper.TeamMapper;
 import com.project.model.Team;
 import com.project.service.TeamService;
-import com.project.service.UserService;
+import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,16 +26,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
     private final TeamService teamService;
     private final TeamMapper teamMapper;
+    private final PageRequestUtil pageRequestUtil;
 
     @GetMapping
-    private List<TeamResponseDto> getTeams() {
-        return teamService.getAll().stream()
+    private List<TeamResponseDto> findAll(@RequestParam(defaultValue = "20") Integer count,
+                                           @RequestParam(defaultValue = "0") Integer page,
+                                           @RequestParam(defaultValue = "id") String sortBy) {
+        PageRequest pageRequest = pageRequestUtil
+                .getPageRequest(count, page, sortBy, "id");
+        return teamService.findAll(pageRequest)
+                .stream()
                 .map(teamMapper::modelToDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    private TeamResponseDto getTeamById(@PathVariable Long id) {
+    private TeamResponseDto getById(@PathVariable Long id) {
         return teamMapper.modelToDto(teamService.getById(id));
     }
 
@@ -53,7 +60,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
-    public TeamResponseDto updateTeam(@PathVariable Long id,
+    public TeamResponseDto update(@PathVariable Long id,
                                       @RequestBody TeamRequestDto teamRequestDto) {
         Team team = teamMapper.dtoToModel(teamRequestDto);
         team.setId(id);
@@ -61,10 +68,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTeam(@PathVariable Long id) {
-        Team team = teamService.getById(id);
-        if (team != null) {
-            teamService.deleteById(id);
-        }
+    public void deleteById(@PathVariable Long id) {
+        teamService.deleteById(id);
     }
 }

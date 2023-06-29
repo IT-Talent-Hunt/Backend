@@ -7,6 +7,7 @@ import com.project.repository.TeamRepository;
 import com.project.service.TeamService;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,8 +25,8 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> getAll() {
-        return teamRepository.findAll();
+    public List<Team> findAll(PageRequest pageRequest) {
+        return teamRepository.findAll(pageRequest).toList();
     }
 
     @Override

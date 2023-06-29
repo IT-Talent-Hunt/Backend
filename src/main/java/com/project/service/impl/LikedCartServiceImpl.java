@@ -6,6 +6,7 @@ import com.project.model.User;
 import com.project.repository.LikedCartRepository;
 import com.project.service.LikedCartService;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -53,8 +54,8 @@ public class LikedCartServiceImpl implements LikedCartService {
     }
 
     @Override
-    public List<LikedCart> getAll() {
-        return likedCartRepository.findAll();
+    public List<LikedCart> findAll(PageRequest pageRequest) {
+        return likedCartRepository.findAll(pageRequest).toList();
     }
 
     @Override

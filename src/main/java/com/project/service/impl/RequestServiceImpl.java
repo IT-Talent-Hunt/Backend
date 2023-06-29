@@ -8,6 +8,7 @@ import com.project.service.ProjectService;
 import com.project.service.RequestService;
 import com.project.service.TeamService;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,8 +31,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getAll() {
-        return requestRepository.findAll();
+    public List<Request> findAll(PageRequest pageRequest) {
+        return requestRepository.findAll(pageRequest).toList();
     }
 
     @Override

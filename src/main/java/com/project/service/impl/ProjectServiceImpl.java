@@ -5,6 +5,7 @@ import com.project.model.ProjectStatus;
 import com.project.repository.ProjectRepository;
 import com.project.service.ProjectService;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +22,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> getAll() {
-        return projectRepository.findAll();
+    public List<Project> findAll(PageRequest pageRequest) {
+        return projectRepository.findAll(pageRequest).toList();
     }
 
     @Override

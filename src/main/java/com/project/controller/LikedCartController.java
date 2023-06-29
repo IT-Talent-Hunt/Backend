@@ -8,14 +8,15 @@ import com.project.model.User;
 import com.project.service.LikedCartService;
 import com.project.service.ProjectService;
 import com.project.service.UserService;
+import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,16 +33,21 @@ public class LikedCartController {
     private final LikedCartService likedCartService;
     private final LikedCartMapper likedCartMapper;
     private final ProjectService projectService;
+    private final PageRequestUtil pageRequestUtil;
 
     @GetMapping
-    public List<LikedCartResponseDto> getAll() {
-        return likedCartService.getAll().stream()
+    public List<LikedCartResponseDto> findAll(@RequestParam(defaultValue = "20") Integer count,
+                                              @RequestParam(defaultValue = "0") Integer page,
+                                              @RequestParam(defaultValue = "id") String sortBy) {
+        PageRequest pageRequest = pageRequestUtil
+                .getPageRequest(count, page, sortBy, "id");
+        return likedCartService.findAll(pageRequest).stream()
                 .map(likedCartMapper::modelToDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    private LikedCartResponseDto getLikedCartById(@PathVariable Long id) {
+    private LikedCartResponseDto getById(@PathVariable Long id) {
         return likedCartMapper.modelToDto(likedCartService.getById(id));
     }
 
@@ -61,7 +67,7 @@ public class LikedCartController {
     }
 
     @PutMapping("/{id}")
-    public LikedCartResponseDto updateLikedCart(
+    public LikedCartResponseDto update(
             @PathVariable Long id,
             @RequestBody LikedCartRequestDto likedCartRequestDto) {
         LikedCart likedCart = likedCartMapper.dtoToModel(likedCartRequestDto);
@@ -69,9 +75,9 @@ public class LikedCartController {
         return likedCartMapper.modelToDto(likedCartService.save(likedCart));
     }
 
-    @PatchMapping("/project/add")
+    @PutMapping("/projects/{projectId}")
     public LikedCartResponseDto addProject(Authentication auth,
-                                           @RequestParam Long projectId) throws Exception {
+                                           @PathVariable Long projectId) throws Exception {
         UserDetails details = (UserDetails) auth.getPrincipal();
         String email = details.getUsername();
         return likedCartMapper.modelToDto(
@@ -79,9 +85,9 @@ public class LikedCartController {
                         userService.findByEmail(email)));
     }
 
-    @PatchMapping("/project/delete")
+    @DeleteMapping("/projects/{projectId}")
     public LikedCartResponseDto deleteProject(Authentication auth,
-                                              @RequestParam Long projectId) throws Exception {
+                                              @PathVariable Long projectId) throws Exception {
         UserDetails details = (UserDetails) auth.getPrincipal();
         String email = details.getUsername();
         return likedCartMapper.modelToDto(
@@ -90,10 +96,7 @@ public class LikedCartController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteLikedCart(@PathVariable Long id) {
-        LikedCart likedCart = likedCartService.getById(id);
-        if (likedCart != null) {
-            likedCartService.deleteById(id);
-        }
+    public void deleteById(@PathVariable Long id) {
+        likedCartService.deleteById(id);
     }
 }
