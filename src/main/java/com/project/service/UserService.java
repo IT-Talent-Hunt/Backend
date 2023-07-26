@@ -17,6 +17,8 @@ public interface UserService {
 
     User update(User user);
 
+    User updatePartial(User user);
+
     User registerNewUser(SignUpDto signUpDto)
             throws EmailAlreadyRegisteredException, AuthenticationException;
 

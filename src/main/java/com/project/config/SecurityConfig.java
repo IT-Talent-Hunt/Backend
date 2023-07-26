@@ -38,14 +38,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/oauth/**", "/auth/**", "/login").permitAll()
+                .antMatchers("/**", "/oauth/**", "/auth/**", "/login", "/projects").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().permitAll()
                 .and()
                 .httpBasic()
                 .and()
-                .csrf().disable()
+                    .csrf().disable()
                 .oauth2Login()
                     .loginPage("/login")
                     .userInfoEndpoint()

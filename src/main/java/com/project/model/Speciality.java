@@ -21,12 +21,15 @@ public class Speciality {
     }
 
     public enum SpecialityName {
-        QA,
-        BACKEND,
-        FRONTEND,
-        FULLSTACK,
-        DEVOPS,
-        PROJECT_MANAGER,
-        DESIGNER
+        QA(""),
+        BACKEND(""),
+        FRONTEND(""),
+        FULLSTACK(""),
+        DEVOPS(""),
+        PROJECT_MANAGER(""),
+        DESIGNER("");
+
+        SpecialityName(String qa) {
+        }
     }
 }

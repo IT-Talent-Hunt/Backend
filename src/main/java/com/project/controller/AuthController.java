@@ -6,10 +6,9 @@ import com.project.dto.response.UserResponseDto;
 import com.project.exception.EmailAlreadyRegisteredException;
 import com.project.mapper.UserMapper;
 import com.project.service.UserService;
+import javax.mail.AuthenticationFailedException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+//@CrossOrigin(origins = "http://localhost:3001")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
@@ -29,15 +29,19 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/signIn")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
+    public UserResponseDto authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(
                             loginDto.getEmail(), loginDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok("Authentication successful");
+            return userMapper.toDto(userService.findByEmail(loginDto.getEmail()));
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            try {
+                throw new AuthenticationFailedException("Invalid email or password!" + e);
+            } catch (AuthenticationFailedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 

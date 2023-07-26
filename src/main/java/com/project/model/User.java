@@ -1,8 +1,6 @@
 package com.project.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CollectionTable;
@@ -39,10 +37,10 @@ public class User {
     private LocalDate registrationDate;
     @ElementCollection
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
-    private List<Role> roles = new ArrayList<>();
+    private List<Role> roles;
     @ElementCollection
     @CollectionTable(name = "specialities", joinColumns = @JoinColumn(name = "user_id"))
-    private Set<Speciality> specialities = new HashSet<>();
+    private Set<Speciality> specialities;
 
     public enum Provider {
         LOCAL,

@@ -65,6 +65,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updatePartial(User user) {
+        User userFromDb = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserNotFoundException(
+                        "Couldn't find user by id: " + user.getId()));
+        userFromDb.setFirstName(user.getFirstName());
+        userFromDb.setLastName(user.getLastName());
+        userFromDb.setSpecialities(user.getSpecialities());
+        return userRepository.save(userFromDb);
+    }
+
+    @Override
     public User registerNewUser(SignUpDto signUpDto) throws EmailAlreadyRegisteredException,
             AuthenticationException {
         Optional<User> byEmailFetchRoles = userRepository
