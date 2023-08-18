@@ -1,19 +1,19 @@
 package com.project.model;
 
 import java.time.LocalDateTime;
-import java.util.Map;
-import javax.persistence.CollectionTable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,22 +38,39 @@ public class Project {
     @CreatedDate
     private LocalDateTime creationDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
-
     private String description;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
-    @ElementCollection
-    @CollectionTable(name = "social_links", joinColumns = @JoinColumn(name = "project_id"))
-    private Map<String, String> socialLinks;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private SocialLink socialLink;
     @Enumerated(EnumType.STRING)
-    private ProjectStatus.Status projectStatus;
+    private Status status;
 
-    public Project() {
-        this.projectStatus = ProjectStatus.Status.RECRUITMENT;
+    public enum Status {
+        RECRUITMENT("Recruitment"),
+        IN_PROGRESS("In progress"),
+        FINISHED("Finished");
+        private final String value;
+
+        Status(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static Status fromValue(String value) {
+            for (Status status : Status.values()) {
+                if (status.value.equalsIgnoreCase(value)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Invalid project status value: " + value);
+        }
     }
 }

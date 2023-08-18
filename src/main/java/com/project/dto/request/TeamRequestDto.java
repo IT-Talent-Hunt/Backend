@@ -7,6 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TeamRequestDto {
-    private List<Long> usersIds;
-    private List<String> specialitiesNames;
+    private List<Long> userIds;
+    private List<String> requiredSpecialities;
 }

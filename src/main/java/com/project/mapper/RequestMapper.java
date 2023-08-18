@@ -4,7 +4,6 @@ import com.project.dto.request.RequestModelRequestDto;
 import com.project.dto.response.RequestResponseDto;
 import com.project.model.Request;
 import com.project.service.ProjectService;
-import com.project.service.SpecialityService;
 import com.project.service.UserService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,7 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
-@Mapper(uses = {ProjectService.class, UserService.class, SpecialityService.class},
+@Mapper(uses = {ProjectService.class, UserService.class},
         componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.ERROR,
         typeConversionPolicy = ReportingPolicy.ERROR,
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
 public interface RequestMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "project.id", target = "projectId")
-    @Mapping(source = "specialityName", target = "speciality")
+    @Mapping(source = "speciality.value", target = "speciality")
     RequestResponseDto modelToDto(Request request);
 
     @Mapping(target = "id", ignore = true)
@@ -31,7 +30,7 @@ public interface RequestMapper {
     @Mapping(source = "userId", target = "user")
     @Mapping(source = "projectId", target = "project")
     @Mapping(source = "message", target = "message")
-    @Mapping(source = "speciality", target = "specialityName")
+    @Mapping(source = "speciality", target = "speciality")
     Request dtoToModel(RequestModelRequestDto requestModelRequestDto);
 
 }

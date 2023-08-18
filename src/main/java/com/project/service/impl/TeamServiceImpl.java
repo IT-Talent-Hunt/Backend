@@ -1,6 +1,5 @@
 package com.project.service.impl;
 
-import com.project.model.Speciality;
 import com.project.model.Team;
 import com.project.model.User;
 import com.project.repository.TeamRepository;
@@ -30,19 +29,6 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team addUser(Team team, User user, Speciality.SpecialityName speciality) {
-        if (user.getSpecialities().stream()
-                .map(Speciality::getSpecialityName)
-                .toList().contains(speciality)) {
-            team.getUsers().add(user);
-            team.getSpecialities().remove(speciality);
-            save(team);
-            return team;
-        }
-        return team;
-    }
-
-    @Override
     public Team save(Team team) {
         return teamRepository.save(team);
     }
@@ -53,17 +39,9 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team specialitiesNamesToSpecialities(List<String> specialityNames) {
-        List<Speciality.SpecialityName> specialities = specialityNames.stream()
-                .map(Speciality.SpecialityName::valueOf)
-                .toList();
-        return save(new Team(specialities));
-    }
-
-    @Override
     public Team addSpeciality(Team team, String speciality) {
-        Speciality.SpecialityName specialityName = Speciality.SpecialityName.valueOf(speciality);
-        team.getSpecialities().add(specialityName);
+        User.Speciality specialityName = User.Speciality.fromValue(speciality);
+        team.getRequiredSpecialities().add(specialityName);
         return save(team);
     }
 }

@@ -3,6 +3,7 @@ package com.project.model;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,20 +21,25 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
-
-    private Speciality.SpecialityName specialityName;
-
+    @Enumerated(EnumType.STRING)
+    private User.Speciality speciality;
     private String message;
     @Enumerated(EnumType.STRING)
-    private RequestStatus.Status status;
+    private Status status;
 
     public Request() {
-        status = RequestStatus.Status.PENDING;
+        status = Status.PENDING;
+    }
+
+    public enum Status {
+        ACCEPTED,
+        PENDING,
+        REJECTED
     }
 }
