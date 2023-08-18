@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.dto.request.UserPartRequestDto;
 import com.project.dto.request.UserRequestDto;
 import com.project.dto.response.UserResponseDto;
 import com.project.mapper.UserMapper;
@@ -9,10 +10,11 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -29,10 +31,18 @@ public class UserController {
 
     @PutMapping("/{id}")
     public UserResponseDto update(@PathVariable Long id,
-                                  @Valid @RequestParam UserRequestDto userRequestDto) {
+                                  @Valid @RequestBody UserRequestDto userRequestDto) {
         User user = userMapper.toEntity(userRequestDto);
         user.setId(id);
         return userMapper.toDto(userService.update(user));
+    }
+
+    @PatchMapping("/{id}")
+    public UserResponseDto updateUser(@PathVariable Long id,
+                                      @Valid @RequestBody UserPartRequestDto userRequestDto) {
+        User user = userMapper.toEntity(userRequestDto);
+        user.setId(id);
+        return userMapper.toDto(userService.updatePartial(user));
     }
 
     @DeleteMapping("/{id}")

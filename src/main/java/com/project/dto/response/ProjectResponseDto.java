@@ -1,19 +1,9 @@
 package com.project.dto.response;
 
+import com.project.model.SocialLink;
 import java.time.LocalDateTime;
-import java.util.Map;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class ProjectResponseDto {
-    private Long id;
-    private String name;
-    private LocalDateTime creationDate;
-    private Long ownerId;
-    private String description;
-    private Long teamId;
-    private Map<String, String> socialLinks;
-    private String status;
+public record ProjectResponseDto(Long id, String name, LocalDateTime creationDate,
+                                 Long ownerId, String description, TeamResponseDto teamResponseDto,
+                                 SocialLink socialLink, String status){
 }

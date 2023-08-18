@@ -1,10 +1,11 @@
 package com.project.dto.request;
 
 import com.project.model.Role;
-import com.project.model.Speciality;
+import com.project.model.SocialLink;
 import com.project.validation.ValidEmail;
 import java.util.List;
-import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,9 +18,14 @@ public class UserRequestDto {
     private String lastName;
     @ValidEmail
     private String email;
+    @NotBlank
+    @Size(min = 6, max = 20)
     private String password;
+    private String description;
+    private List<SocialLink> socialLinks;
     private String profileImage;
-    private Set<Speciality> specialities;
+    private String speciality;
     private List<Role> roles;
+    private String skills;
 
 }

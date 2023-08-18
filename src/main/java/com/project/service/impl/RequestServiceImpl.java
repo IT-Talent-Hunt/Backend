@@ -1,8 +1,6 @@
 package com.project.service.impl;
 
-import com.project.model.ProjectStatus;
 import com.project.model.Request;
-import com.project.model.RequestStatus;
 import com.project.repository.RequestRepository;
 import com.project.service.ProjectService;
 import com.project.service.RequestService;
@@ -47,15 +45,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request changeStatus(Request request, String status) {
-        request.setStatus(RequestStatus.Status.valueOf(status));
-        if (request.getStatus() == RequestStatus.Status.ACCEPTED) {
-            teamService.addUser(request.getProject().getTeam(),
-                    request.getUser(), request.getSpecialityName());
-            if (request.getProject().getTeam().getSpecialities().size() == 0) {
-                projectService.changeStatus(request.getProject(),
-                        ProjectStatus.Status.IN_PROGRESS.toString());
-            }
-        }
-        return save(request);
+        // TODO
+        return null;
     }
 }

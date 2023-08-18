@@ -45,7 +45,7 @@ public class TeamController {
         return teamMapper.modelToDto(teamService.getById(id));
     }
 
-    @PostMapping("/add-speciality")
+    @PostMapping("/{id}/add-speciality")
     public TeamResponseDto addRequiredSpeciality(@PathVariable Long id,
                                                  @RequestParam String speciality) {
         return teamMapper.modelToDto(

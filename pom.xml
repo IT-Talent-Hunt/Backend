@@ -6,24 +6,24 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.3</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com</groupId>
     <artifactId>project</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>project</name>
     <description>project</description>
-    <properties>
-        <spring.security.version>5.6.10</spring.security.version>
-        <java.version>17</java.version>
-        <lombok.version>1.18.22</lombok.version>
-        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
-        <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
-        <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
-        <maven.checkstyle.plugin.configLocation>
-            checkstyle.xml
-        </maven.checkstyle.plugin.configLocation>
-    </properties>
+        <properties>
+            <spring.security.version>5.6.10</spring.security.version>
+            <java.version>17</java.version>
+            <lombok.version>1.18.22</lombok.version>
+            <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
+            <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
+            <maven.checkstyle.plugin.version>8.44</maven.checkstyle.plugin.version>
+            <maven.checkstyle.plugin.configLocation>
+                checkstyle.xml
+            </maven.checkstyle.plugin.configLocation>
+        </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -48,16 +48,6 @@
             <version>2.4.12</version>
         </dependency>
         <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter</artifactId>
-            <version>4.5.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
-            <version>4.5.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
@@ -70,7 +60,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <version>8.0.28</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -97,9 +87,9 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
-            <version>4.3.0</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -116,13 +106,16 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <build>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -136,7 +129,6 @@
                         <sourceDirectory>src/main/java</sourceDirectory>
                     </sourceDirectories>
                     <configLocation>${maven.checkstyle.plugin.configLocation}</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
@@ -156,10 +148,6 @@
                             <goals><goal>copy-dependencies</goal></goals>
                         </execution>
                     </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

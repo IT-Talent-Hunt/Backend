@@ -1,5 +1,6 @@
 package com.project.service;
 
+import com.project.dto.ProjectSearchParameters;
 import com.project.model.Project;
 import java.util.List;
 import org.springframework.data.domain.PageRequest;
@@ -9,11 +10,17 @@ public interface ProjectService {
 
     List<Project> findAll(PageRequest pageRequest);
 
+    List<Project> search(ProjectSearchParameters params);
+
     Project save(Project project);
 
     void deleteById(Long id);
 
     List<Project> findAllByIdIn(List<Long> ids);
+
+    List<Project> findAllByUserIdAndProjectStatus(Long userId, Project.Status status);
+
+    List<Project> findAllOwnedByOwnerId(Long id);
 
     Project changeStatus(Project project, String status);
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,14 +25,20 @@ public class Team {
     private Long id;
     @ManyToMany
     private List<User> users;
+    @Enumerated(EnumType.STRING)
     @ElementCollection
     @CollectionTable(name = "specialities_teams", joinColumns = @JoinColumn(name = "team_id"))
-    private List<Speciality.SpecialityName> specialities;
+    private List<User.Speciality> requiredSpecialities;
 
     public Team() {
     }
 
-    public Team(List<Speciality.SpecialityName> specialityNames) {
-        this.specialities = specialityNames;
+    public Team(List<User.Speciality> requiredSpecialities) {
+        this.requiredSpecialities = requiredSpecialities;
     }
+
+    public int getMaxMembers() {
+        return users.size() + requiredSpecialities.size();
+    }
+
 }

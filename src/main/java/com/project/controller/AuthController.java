@@ -4,8 +4,12 @@ import com.project.dto.request.LoginDto;
 import com.project.dto.request.SignUpDto;
 import com.project.dto.response.UserResponseDto;
 import com.project.exception.EmailAlreadyRegisteredException;
+import com.project.jwt.JwtTokenProvider;
 import com.project.mapper.UserMapper;
+import com.project.model.User;
 import com.project.service.UserService;
+import java.util.Map;
+import javax.mail.AuthenticationFailedException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,23 +31,42 @@ public class AuthController {
     private final UserMapper userMapper;
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/signIn")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
+    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(
                             loginDto.getEmail(), loginDto.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok("Authentication successful");
+            User user = userService.findByEmail(loginDto.getEmail());
+            String token = jwtTokenProvider.createToken(user.getEmail(),
+                    user.getRoles()
+                            .stream()
+                            .map(a -> a.getRoleName().name())
+                            .toList());
+            return new ResponseEntity<>(Map.of("token", token, "userResponseDto", userMapper
+                    .toDto(user)), HttpStatus.OK);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+            try {
+                throw new AuthenticationFailedException("Invalid email or password!" + e);
+            } catch (AuthenticationFailedException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
     @PostMapping("/signUp")
-    public UserResponseDto registerUser(@Valid @RequestBody SignUpDto signUpDto)
+    public ResponseEntity<Object> registerUser(@Valid @RequestBody SignUpDto signUpDto)
             throws EmailAlreadyRegisteredException, javax.naming.AuthenticationException {
-        return userMapper.toDto(userService.registerNewUser(signUpDto));
+        UserResponseDto userResponseDto = userMapper.toDto(userService.registerNewUser(signUpDto));
+        String token = jwtTokenProvider.createToken(userResponseDto.email(),
+                userResponseDto.roles()
+                        .stream()
+                        .map(a -> a.getRoleName().name())
+                        .toList());
+        return new ResponseEntity<>(Map.of("token", token,
+                "userResponseDto", userResponseDto), HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.project.controller;
 
+import com.project.dto.ProjectSearchParameters;
 import com.project.dto.request.ProjectRequestDto;
 import com.project.dto.response.ProjectResponseDto;
 import com.project.mapper.ProjectMapper;
@@ -40,9 +41,35 @@ public class ProjectController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/search")
+    public List<ProjectResponseDto> search(ProjectSearchParameters params) {
+
+        return projectService.search(params).stream()
+                .map(projectMapper::modelToDto).toList();
+    }
+
     @GetMapping("/{id}")
-    private ProjectResponseDto getById(@PathVariable Long id) {
+    public ProjectResponseDto getById(@PathVariable Long id) {
         return projectMapper.modelToDto(projectService.getById(id));
+    }
+
+    @GetMapping("/by-user/{userId}")
+    public List<ProjectResponseDto> findAllOwnedByUserId(@PathVariable Long userId) {
+        return projectService.findAllOwnedByOwnerId(userId)
+                .stream()
+                .map(projectMapper::modelToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/by-user/{userId}/status")
+    public List<ProjectResponseDto> findAllByUserIdAndProjectStatus(
+            @PathVariable Long userId,
+            @RequestParam String projectStatus) {
+        return projectService.findAllByUserIdAndProjectStatus(userId,
+                        Project.Status.valueOf(projectStatus))
+                .stream()
+                .map(projectMapper::modelToDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping

@@ -1,22 +1,12 @@
 package com.project.dto.response;
 
 import com.project.model.Role;
-import com.project.model.Speciality;
+import com.project.model.SocialLink;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class UserResponseDto {
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String provider;
-    private LocalDate registrationDate;
-    private String profileImage;
-    private List<Role> roles;
-    private Set<Speciality> specialities;
+public record UserResponseDto(Long id, String firstName, String lastName, String email,
+                              String provider, LocalDate registrationDate, String profileImage,
+                              String description, String skills, List<SocialLink> socialLinks,
+                              List<Role> roles, String speciality) {
 }

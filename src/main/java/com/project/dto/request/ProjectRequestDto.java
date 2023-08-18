@@ -1,7 +1,6 @@
 package com.project.dto.request;
 
-import java.util.List;
-import java.util.Map;
+import com.project.model.SocialLink;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +10,7 @@ public class ProjectRequestDto {
     private String name;
     private Long ownerId;
     private String description;
-    private List<String> requiredSpeciality;
-    private Map<String, String> socialLinks;
+    private TeamRequestDto teamRequestDto;
+    private SocialLink socialLink;
+    private String status;
 }
