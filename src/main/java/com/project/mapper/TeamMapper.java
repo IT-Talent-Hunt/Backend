@@ -43,7 +43,7 @@ public interface TeamMapper {
     @Named("specialitiesToStrings")
     default List<String> specialitiesToStrings(List<User.Speciality> specialities) {
         return specialities.stream()
-                .map(Enum::name)
+                .map(User.Speciality::getValue)
                 .collect(Collectors.toList());
     }
 

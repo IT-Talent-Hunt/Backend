@@ -7,8 +7,10 @@ import com.project.mapper.ProjectMapper;
 import com.project.model.Project;
 import com.project.service.ProjectService;
 import com.project.util.PageRequestUtil;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,9 +44,13 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public List<ProjectResponseDto> search(ProjectSearchParameters params) {
-
-        return projectService.search(params).stream()
+    public List<ProjectResponseDto> search(ProjectSearchParameters params,
+                                           @RequestParam(defaultValue = "20") Integer count,
+                                           @RequestParam(defaultValue = "0") Integer page,
+                                           @RequestParam(defaultValue = "id") String sortBy) {
+        PageRequest pageRequest = pageRequestUtil
+                .getPageRequest(count, page, sortBy, "id", "name", "creationDate", "status");
+        return projectService.search(params, pageRequest).stream()
                 .map(projectMapper::modelToDto).toList();
     }
 
@@ -73,7 +79,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    private ProjectResponseDto save(@RequestBody ProjectRequestDto projectRequestDto) {
+    private ProjectResponseDto save(@Valid @RequestBody ProjectRequestDto projectRequestDto) {
         return projectMapper.modelToDto(
                 projectService.save(
                         projectMapper.dtoToModel(projectRequestDto)));
@@ -81,9 +87,11 @@ public class ProjectController {
 
     @PutMapping("/{id}")
     public ProjectResponseDto update(@PathVariable Long id,
-                                      @RequestBody ProjectRequestDto projectRequestDto) {
+                                      @Valid @RequestBody ProjectRequestDto projectRequestDto) {
+        LocalDateTime creationDate = projectService.getById(id).getCreationDate();
         Project project = projectMapper.dtoToModel(projectRequestDto);
         project.setId(id);
+        project.setCreationDate(creationDate);
         return projectMapper.modelToDto(projectService.save(project));
     }
 

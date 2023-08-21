@@ -6,22 +6,16 @@ import com.project.service.ProjectService;
 import com.project.service.RequestService;
 import com.project.service.TeamService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final ProjectService projectService;
     private final TeamService teamService;
-
-    public RequestServiceImpl(RequestRepository requestRepository,
-                              ProjectService projectService,
-                              TeamService teamService) {
-        this.requestRepository = requestRepository;
-        this.projectService = projectService;
-        this.teamService = teamService;
-    }
 
     @Override
     public Request getById(Long id) {

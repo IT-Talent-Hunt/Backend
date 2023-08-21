@@ -8,6 +8,7 @@ import com.project.service.TeamService;
 import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,8 +31,8 @@ public class TeamController {
 
     @GetMapping
     private List<TeamResponseDto> findAll(@RequestParam(defaultValue = "20") Integer count,
-                                           @RequestParam(defaultValue = "0") Integer page,
-                                           @RequestParam(defaultValue = "id") String sortBy) {
+                                          @RequestParam(defaultValue = "0") Integer page,
+                                          @RequestParam(defaultValue = "id") String sortBy) {
         PageRequest pageRequest = pageRequestUtil
                 .getPageRequest(count, page, sortBy, "id");
         return teamService.findAll(pageRequest)
@@ -41,19 +42,25 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    private TeamResponseDto getById(@PathVariable Long id) {
-        return teamMapper.modelToDto(teamService.getById(id));
+    private TeamResponseDto findById(@PathVariable Long id) {
+        return teamMapper.modelToDto(teamService.findById(id));
     }
 
     @PostMapping("/{id}/add-speciality")
     public TeamResponseDto addRequiredSpeciality(@PathVariable Long id,
                                                  @RequestParam String speciality) {
         return teamMapper.modelToDto(
-                teamService.addSpeciality(teamService.getById(id), speciality));
+                teamService.addSpeciality(teamService.findById(id), speciality));
+    }
+
+    @PostMapping("/{id}/{userId}")
+    public TeamResponseDto addUser(@PathVariable Long id,
+                                   @PathVariable Long userId) {
+        return teamMapper.modelToDto(teamService.addUser(id, userId));
     }
 
     @PostMapping
-    private TeamResponseDto save(@RequestBody TeamRequestDto teamRequestDto) {
+    private TeamResponseDto save(@Valid @RequestBody TeamRequestDto teamRequestDto) {
         return teamMapper.modelToDto(
                 teamService.save(
                         teamMapper.dtoToModel(teamRequestDto)));
@@ -61,7 +68,7 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public TeamResponseDto update(@PathVariable Long id,
-                                      @RequestBody TeamRequestDto teamRequestDto) {
+                                  @Valid @RequestBody TeamRequestDto teamRequestDto) {
         Team team = teamMapper.dtoToModel(teamRequestDto);
         team.setId(id);
         return teamMapper.modelToDto(teamService.save(team));

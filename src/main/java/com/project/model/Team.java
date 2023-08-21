@@ -30,15 +30,7 @@ public class Team {
     @CollectionTable(name = "specialities_teams", joinColumns = @JoinColumn(name = "team_id"))
     private List<User.Speciality> requiredSpecialities;
 
-    public Team() {
-    }
-
-    public Team(List<User.Speciality> requiredSpecialities) {
-        this.requiredSpecialities = requiredSpecialities;
-    }
-
     public int getMaxMembers() {
         return users.size() + requiredSpecialities.size();
     }
-
 }

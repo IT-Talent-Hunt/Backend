@@ -23,7 +23,9 @@ This project serves as a platform for individuals interested in the IT world to 
 ## Getting Started
 
 To run the backend part of the application, follow these steps:
+This application is deployed in the render cloud and you can test the API at https://skill-swap-hub.onrender.com. Also, this is a team project and other people develop a frontend part (this part is under development, some features are not implemented in the frontend). Link - https://github.com/IT-Talent-Hunt/Frontend.
 
+Attention: for first request server is dowload and waighting time +-1 minute(only for first request)
 1. Clone this repository to your local machine.
 2. Configure the `application.properties` file:
     - Set `spring.datasource.username` and `spring.datasource.password` to your database credentials.

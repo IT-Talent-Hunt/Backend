@@ -28,9 +28,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> search(ProjectSearchParameters params) {
+    public List<Project> search(ProjectSearchParameters params, PageRequest pageRequest) {
         Specification<Project> projectSpecification = projectSpecificationBuilder.build(params);
-        return projectRepository.findAll(projectSpecification);
+        return projectRepository.findAll(projectSpecification, pageRequest).toList();
     }
 
     @Override

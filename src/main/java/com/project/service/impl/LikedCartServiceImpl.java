@@ -6,16 +6,14 @@ import com.project.model.User;
 import com.project.repository.LikedCartRepository;
 import com.project.service.LikedCartService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class LikedCartServiceImpl implements LikedCartService {
     private final LikedCartRepository likedCartRepository;
-
-    public LikedCartServiceImpl(LikedCartRepository likedCartRepository) {
-        this.likedCartRepository = likedCartRepository;
-    }
 
     @Override
     public LikedCart getById(Long id) {

@@ -10,7 +10,7 @@ public interface ProjectService {
 
     List<Project> findAll(PageRequest pageRequest);
 
-    List<Project> search(ProjectSearchParameters params);
+    List<Project> search(ProjectSearchParameters params, PageRequest pageRequest);
 
     Project save(Project project);
 

@@ -11,6 +11,7 @@ import com.project.service.UserService;
 import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -60,7 +61,7 @@ public class LikedCartController {
     }
 
     @PostMapping
-    public LikedCartResponseDto save(@RequestBody LikedCartRequestDto likedCartRequestDto) {
+    public LikedCartResponseDto save(@Valid @RequestBody LikedCartRequestDto likedCartRequestDto) {
         return likedCartMapper.modelToDto(
                 likedCartService.save(
                         likedCartMapper.dtoToModel(likedCartRequestDto)));

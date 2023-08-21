@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,31 +46,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/oauth/**", "/auth/**", "/login").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/oauth/**", "/auth/**", "/login").permitAll()// Secure endpoints
+                .anyRequest().authenticated() // Allow other endpoints
                 .and()
-                .httpBasic().disable()
-                    .csrf().disable()
+                .oauth2Login().userInfoEndpoint().userService(oauth2UserService)
+                .and()
+                .and()
+                .csrf().disable()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-
                 .exceptionHandling()
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .apply(new JwtConfigurer(jwtTokenProvider))
-                .and()
-                .oauth2Login()
-                    .loginPage("/login")
-                    .userInfoEndpoint()
-                        .userService(oauth2UserService);
+                .apply(new JwtConfigurer(jwtTokenProvider)); // Configure JWT authentication
     }
 
     CorsConfigurationSource corsConfigurationSource() {
         final var configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:3001",
-                "http://localhost:3002"));
+                "http://localhost:3002", "https://it-talent-hunt.github.io"));
         configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "PATCH", "POST", "DELETE",
                 "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type",

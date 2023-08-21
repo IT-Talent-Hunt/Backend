@@ -8,6 +8,7 @@ import com.project.service.RequestService;
 import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,7 +47,7 @@ public class RequestController {
     }
 
     @PostMapping
-    public RequestResponseDto save(@RequestBody RequestModelRequestDto requestDto) {
+    public RequestResponseDto save(@Valid @RequestBody RequestModelRequestDto requestDto) {
         return requestMapper.modelToDto(
                 requestService.save(
                         requestMapper.dtoToModel(requestDto)));
@@ -62,7 +63,7 @@ public class RequestController {
 
     @PutMapping("/{id}")
     public RequestResponseDto update(@PathVariable Long id,
-                                      @RequestBody RequestModelRequestDto requestDto) {
+                                      @Valid @RequestBody RequestModelRequestDto requestDto) {
         Request request = requestMapper.dtoToModel(requestDto);
         request.setId(id);
         return requestMapper.modelToDto(requestService.save(request));
