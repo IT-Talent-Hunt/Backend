@@ -112,12 +112,9 @@ public class UserServiceImpl implements UserService {
 
     private void setDefaultLinks(User user) {
         List<SocialLink> socialLinks = new ArrayList<>();
-        socialLinks.add(new SocialLink("Email", ""));
-        socialLinks.add(new SocialLink("Discord", ""));
-        socialLinks.add(new SocialLink("LinkedIn", ""));
+        socialLinks.add(new SocialLink("Email", user.getEmail()));
         socialLinks.add(new SocialLink("Telegram", ""));
-        socialLinks.add(new SocialLink("Slack", ""));
-        socialLinks.add(new SocialLink("GitHub", ""));
+        socialLinks.add(new SocialLink("LinkedIn", ""));
         user.setSocialLinks(socialLinks);
     }
 }
