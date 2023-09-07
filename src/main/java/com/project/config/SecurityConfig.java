@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 .and()
-                .apply(new JwtConfigurer(jwtTokenProvider)); // Configure JWT authentication
+                .apply(new JwtConfigurer(jwtTokenProvider));
     }
 
     CorsConfigurationSource corsConfigurationSource() {
