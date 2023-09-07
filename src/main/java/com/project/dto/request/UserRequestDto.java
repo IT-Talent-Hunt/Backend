@@ -27,5 +27,4 @@ public class UserRequestDto {
     private String speciality;
     private List<Role> roles;
     private String skills;
-
 }

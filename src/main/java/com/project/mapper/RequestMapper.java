@@ -32,5 +32,4 @@ public interface RequestMapper {
     @Mapping(source = "message", target = "message")
     @Mapping(source = "speciality", target = "speciality")
     Request dtoToModel(RequestModelRequestDto requestModelRequestDto);
-
 }
