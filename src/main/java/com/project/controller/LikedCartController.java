@@ -2,8 +2,11 @@ package com.project.controller;
 
 import com.project.dto.request.LikedCartRequestDto;
 import com.project.dto.response.LikedCartResponseDto;
+import com.project.dto.response.ProjectsSearchResponseDto;
 import com.project.mapper.LikedCartMapper;
+import com.project.mapper.ProjectMapper;
 import com.project.model.LikedCart;
+import com.project.model.Project;
 import com.project.model.User;
 import com.project.service.LikedCartService;
 import com.project.service.ProjectService;
@@ -11,8 +14,8 @@ import com.project.service.UserService;
 import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +36,7 @@ public class LikedCartController {
     private final UserService userService;
     private final LikedCartService likedCartService;
     private final LikedCartMapper likedCartMapper;
+    private final ProjectMapper projectMapper;
     private final ProjectService projectService;
     private final PageRequestUtil pageRequestUtil;
 
@@ -52,16 +56,29 @@ public class LikedCartController {
         return likedCartMapper.modelToDto(likedCartService.getById(id));
     }
 
-    @GetMapping("/by-user")
-    public LikedCartResponseDto getByUser(Authentication auth) {
+    @GetMapping("/by-user/projects")
+    public ProjectsSearchResponseDto getProjectsByUser(
+            Authentication auth,
+            @RequestParam(defaultValue = "20") Integer count,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        PageRequest pageRequest = pageRequestUtil
+                .getPageRequest(count, page, sortBy, "id");
         UserDetails details = (UserDetails) auth.getPrincipal();
         String email = details.getUsername();
         User user = userService.findByEmail(email);
-        return likedCartMapper.modelToDto(likedCartService.getByUserId(user.getId()));
+        Page<Project> projectsByUserId = likedCartService
+                .findProjectByUserId(user.getId(), pageRequest);
+        return new ProjectsSearchResponseDto(likedCartService
+                .findProjectByUserId(user.getId(),
+                        pageRequest).getContent()
+                .stream()
+                .map(projectMapper::modelToDto)
+                .toList(), projectsByUserId.getTotalPages());
     }
 
     @PostMapping
-    public LikedCartResponseDto save(@Valid @RequestBody LikedCartRequestDto likedCartRequestDto) {
+    public LikedCartResponseDto save(@RequestBody LikedCartRequestDto likedCartRequestDto) {
         return likedCartMapper.modelToDto(
                 likedCartService.save(
                         likedCartMapper.dtoToModel(likedCartRequestDto)));

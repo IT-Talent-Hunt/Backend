@@ -7,6 +7,7 @@ import com.project.repository.LikedCartRepository;
 import com.project.service.LikedCartService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,13 @@ public class LikedCartServiceImpl implements LikedCartService {
     }
 
     @Override
-    public LikedCart getByUserId(Long id) {
-        return likedCartRepository.getByUserId(id);
+    public Page<Project> findProjectByUserId(Long userId, PageRequest pageRequest) {
+        return likedCartRepository.findProjectsByUserId(userId, pageRequest);
+    }
+
+    @Override
+    public LikedCart getByUserId(Long userId) {
+        return likedCartRepository.getByUserId(userId);
     }
 
     @Override
