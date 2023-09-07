@@ -1,12 +1,13 @@
 package com.project.service.impl;
 
-import com.project.dto.ProjectSearchParameters;
+import com.project.dto.request.ProjectSearchParameters;
 import com.project.model.Project;
 import com.project.repository.project.ProjectRepository;
 import com.project.repository.project.ProjectSpecificationBuilder;
 import com.project.service.ProjectService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> search(ProjectSearchParameters params, PageRequest pageRequest) {
+    public Page<Project> search(ProjectSearchParameters params, PageRequest pageRequest) {
         Specification<Project> projectSpecification = projectSpecificationBuilder.build(params);
-        return projectRepository.findAll(projectSpecification, pageRequest).toList();
+        return projectRepository.findAll(projectSpecification, pageRequest);
     }
 
     @Override

@@ -2,13 +2,12 @@ package com.project.repository.project.spec;
 
 import com.project.model.Project;
 import com.project.repository.SpecificationProvider;
-import java.util.Arrays;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatusSpecificationProvider implements SpecificationProvider<Project> {
-    private static final String key = "status";
+public class NameSpecificationProvider implements SpecificationProvider<Project> {
+    private static final String key = "name";
 
     @Override
     public String getKey() {
@@ -17,7 +16,9 @@ public class StatusSpecificationProvider implements SpecificationProvider<Projec
 
     @Override
     public Specification<Project> getSpecification(String[] params) {
-        return (root, query, criteriaBuilder) -> root.get("status")
-                .in(Arrays.stream(params).map(Project.Status::valueOf).toArray());
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(
+                criteriaBuilder.lower(root.get(key)),
+                "%" + params[0].toLowerCase() + "%"
+        );
     }
 }

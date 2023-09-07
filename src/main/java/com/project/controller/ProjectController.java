@@ -1,8 +1,9 @@
 package com.project.controller;
 
-import com.project.dto.ProjectSearchParameters;
 import com.project.dto.request.ProjectRequestDto;
+import com.project.dto.request.ProjectSearchParameters;
 import com.project.dto.response.ProjectResponseDto;
+import com.project.dto.response.ProjectsSearchResponseDto;
 import com.project.mapper.ProjectMapper;
 import com.project.model.Project;
 import com.project.service.ProjectService;
@@ -10,8 +11,8 @@ import com.project.util.PageRequestUtil;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,14 +45,16 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public List<ProjectResponseDto> search(ProjectSearchParameters params,
-                                           @RequestParam(defaultValue = "20") Integer count,
-                                           @RequestParam(defaultValue = "0") Integer page,
-                                           @RequestParam(defaultValue = "id") String sortBy) {
+    public ProjectsSearchResponseDto search(ProjectSearchParameters params,
+                                            @RequestParam(defaultValue = "20") Integer count,
+                                            @RequestParam(defaultValue = "0") Integer page,
+                                            @RequestParam(defaultValue = "id") String sortBy) {
         PageRequest pageRequest = pageRequestUtil
                 .getPageRequest(count, page, sortBy, "id", "name", "creationDate", "status");
-        return projectService.search(params, pageRequest).stream()
+        Page<Project> projectPage = projectService.search(params, pageRequest);
+        List<ProjectResponseDto> projectList = projectPage.stream()
                 .map(projectMapper::modelToDto).toList();
+        return new ProjectsSearchResponseDto(projectList, projectPage.getTotalPages());
     }
 
     @GetMapping("/{id}")
@@ -79,18 +82,20 @@ public class ProjectController {
     }
 
     @PostMapping
-    private ProjectResponseDto save(@Valid @RequestBody ProjectRequestDto projectRequestDto) {
+    private ProjectResponseDto save(@RequestBody ProjectRequestDto projectRequestDto) {
         return projectMapper.modelToDto(
                 projectService.save(
                         projectMapper.dtoToModel(projectRequestDto)));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/teams/{teamId}")
     public ProjectResponseDto update(@PathVariable Long id,
-                                      @Valid @RequestBody ProjectRequestDto projectRequestDto) {
+                                     @PathVariable Long teamId,
+                                     @RequestBody ProjectRequestDto projectRequestDto) {
         LocalDateTime creationDate = projectService.getById(id).getCreationDate();
         Project project = projectMapper.dtoToModel(projectRequestDto);
         project.setId(id);
+        project.getTeam().setId(teamId);
         project.setCreationDate(creationDate);
         return projectMapper.modelToDto(projectService.save(project));
     }

@@ -1,8 +1,9 @@
 package com.project.service;
 
-import com.project.dto.ProjectSearchParameters;
+import com.project.dto.request.ProjectSearchParameters;
 import com.project.model.Project;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 public interface ProjectService {
@@ -10,7 +11,7 @@ public interface ProjectService {
 
     List<Project> findAll(PageRequest pageRequest);
 
-    List<Project> search(ProjectSearchParameters params, PageRequest pageRequest);
+    Page<Project> search(ProjectSearchParameters params, PageRequest pageRequest);
 
     Project save(Project project);
 

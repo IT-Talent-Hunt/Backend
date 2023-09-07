@@ -37,5 +37,4 @@ public interface ProjectMapper {
     default Project.Status stringToEnum(String status) {
         return Project.Status.fromValue(status);
     }
-
 }

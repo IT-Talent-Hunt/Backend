@@ -15,9 +15,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TeamSpecialitiesSpecificationProvider implements SpecificationProvider<Project> {
+    private static final String key = "specialities";
+
     @Override
     public String getKey() {
-        return "specialities";
+        return key;
     }
 
     @Override
