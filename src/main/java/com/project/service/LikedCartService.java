@@ -12,8 +12,6 @@ public interface LikedCartService {
 
     Page<Project> findProjectByUserId(Long userId, PageRequest pageRequest);
 
-    LikedCart getByUserId(Long userId);
-
     LikedCart addProject(Project project, User user) throws Exception;
 
     LikedCart deleteProject(Project project, User user) throws Exception;

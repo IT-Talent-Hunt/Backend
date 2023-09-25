@@ -74,7 +74,7 @@ public class LikedCartController {
                         pageRequest).getContent()
                 .stream()
                 .map(projectMapper::modelToDto)
-                .toList(), projectsByUserId.getTotalPages());
+                .toList(), projectsByUserId.getTotalPages(), projectsByUserId.getTotalElements());
     }
 
     @PostMapping

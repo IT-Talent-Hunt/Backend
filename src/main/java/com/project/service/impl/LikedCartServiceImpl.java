@@ -27,11 +27,6 @@ public class LikedCartServiceImpl implements LikedCartService {
     }
 
     @Override
-    public LikedCart getByUserId(Long userId) {
-        return likedCartRepository.getByUserId(userId);
-    }
-
-    @Override
     public LikedCart addProject(Project project, User user) throws Exception {
         LikedCart likedCartByUser = likedCartRepository.getByUserId(user.getId());
         if (likedCartByUser.getProjects().contains(project)) {
