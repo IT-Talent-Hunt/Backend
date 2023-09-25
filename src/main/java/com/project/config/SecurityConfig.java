@@ -9,6 +9,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -46,8 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/oauth/**", "/auth/**", "/login").permitAll()// Secure endpoints
-                .anyRequest().authenticated() // Allow other endpoints
+                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/projects/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .oauth2Login().userInfoEndpoint().userService(oauth2UserService)
                 .and()

@@ -31,16 +31,14 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     @Column(name = "creation_date")
     @CreatedDate
     private LocalDateTime creationDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
+    @Column(length = 500)
     private String description;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")

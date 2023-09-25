@@ -1,11 +1,18 @@
 package com.project.service.impl;
 
 import com.project.dto.request.ProjectSearchParameters;
+import com.project.model.LikedCart;
 import com.project.model.Project;
+import com.project.model.Request;
+import com.project.repository.LikedCartRepository;
+import com.project.repository.RequestRepository;
 import com.project.repository.project.ProjectRepository;
 import com.project.repository.project.ProjectSpecificationBuilder;
 import com.project.service.ProjectService;
+import com.project.service.RequestService;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +23,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
+    private final LikedCartRepository likedCartRepository;
+    private final RequestRepository requestRepository;
+    private final RequestService requestService;
     private final ProjectSpecificationBuilder projectSpecificationBuilder;
 
     @Override
@@ -29,8 +39,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Page<Project> search(ProjectSearchParameters params, PageRequest pageRequest) {
-        Specification<Project> projectSpecification = projectSpecificationBuilder.build(params);
+    public Page<Project> search(ProjectSearchParameters params,
+                                PageRequest pageRequest) {
+        Specification<Project> projectSpecification =
+                projectSpecificationBuilder.build(params);
         return projectRepository.findAll(projectSpecification, pageRequest);
     }
 
@@ -41,7 +53,23 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteById(Long id) {
-        projectRepository.deleteById(id);
+        Optional<Project> projectOptional = projectRepository.findById(id);
+        List<Request> allByProjectId = requestRepository.findAllByProjectId(id);
+        allByProjectId.forEach(a -> {
+            a.setProject(null);
+            requestService.update(a);
+        });
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.orElseThrow(
+                    () -> new NoSuchElementException("Couldn't find project by id: " + id));
+            List<LikedCart> likedCarts = likedCartRepository
+                    .findByProjectsContaining(project);
+            for (LikedCart likedCart : likedCarts) {
+                likedCart.getProjects().remove(project);
+            }
+            likedCartRepository.saveAll(likedCarts);
+            projectRepository.deleteById(id);
+        }
     }
 
     @Override

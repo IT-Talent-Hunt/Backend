@@ -1,5 +1,8 @@
 package com.project.controller;
 
+import com.project.exception.DuplicateRequestException;
+import com.project.exception.ProjectOwnershipException;
+import com.project.exception.RequestOwnershipException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import java.util.Date;
@@ -38,24 +41,39 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(body, headers, status);
     }
 
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<Object> handleUserNotFoundException(MalformedJwtException ex) {
-        return new ResponseEntity<>(getBody(ex), HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<Object> handleUserNotFoundException(SignatureException ex) {
         return new ResponseEntity<>(getBody(ex), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(MalformedJwtException ex) {
+        return new ResponseEntity<>(getBody(ex), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ProjectOwnershipException.class)
+    public ResponseEntity<String> handleProjectOwnershipException(ProjectOwnershipException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(RequestOwnershipException.class)
+    public ResponseEntity<String> handleRequestOwnershipException(RequestOwnershipException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Object> handleNoSuchElementException(EntityNotFoundException ex) {
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex) {
         return new ResponseEntity<>(getBody(ex), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
         return new ResponseEntity<>(getBody(ex), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<String> handleDuplicateRequestException(DuplicateRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

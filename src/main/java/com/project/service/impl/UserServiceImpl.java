@@ -10,6 +10,7 @@ import com.project.model.User;
 import com.project.repository.UserRepository;
 import com.project.service.LikedCartService;
 import com.project.service.UserService;
+import com.project.util.RandomColorGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,11 +26,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final LikedCartService likedCartService;
     private final PasswordEncoder passwordEncoder;
+    private final RandomColorGenerator randomColorGenerator;
 
     @Override
     public User save(User user) {
         user.setRoles(List.of(new Role(Role.RoleName.USER)));
         setDefaultLinks(user);
+        user.setProfileImage(randomColorGenerator.generateRandomColor());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

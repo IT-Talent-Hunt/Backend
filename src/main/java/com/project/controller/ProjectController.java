@@ -54,7 +54,8 @@ public class ProjectController {
         Page<Project> projectPage = projectService.search(params, pageRequest);
         List<ProjectResponseDto> projectList = projectPage.stream()
                 .map(projectMapper::modelToDto).toList();
-        return new ProjectsSearchResponseDto(projectList, projectPage.getTotalPages());
+        return new ProjectsSearchResponseDto(
+                projectList, projectPage.getTotalPages(), projectPage.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -109,7 +110,10 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
+    public ProjectResponseDto deleteById(@PathVariable Long id) {
+        ProjectResponseDto projectResponseDto =
+                projectMapper.modelToDto(projectService.getById(id));
         projectService.deleteById(id);
+        return projectResponseDto;
     }
 }

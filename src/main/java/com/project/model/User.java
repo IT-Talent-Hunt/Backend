@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -26,7 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @Getter
 @Entity
-@Table(name = "users_t")
+@Table(name = "userss")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +39,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Provider provider;
     private String profileImage;
+    @Column(length = 500)
     private String description;
     @CreatedDate
     private LocalDate registrationDate;
@@ -48,6 +50,7 @@ public class User {
     private Speciality speciality;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SocialLink> socialLinks;
+    @Column(length = 500)
     private String skills;
 
     public enum Provider {
