@@ -1,5 +1,6 @@
 package com.project.security;
 
+import com.project.jwt.JwtTokenProvider;
 import com.project.model.LikedCart;
 import com.project.model.Role;
 import com.project.model.User;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final LikedCartService likedCartService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oauth2UserRequest)
@@ -47,7 +49,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
             user = registerNewUser(oauth2UserInfo);
         }
-        return UserPrincipal.create(user, oauth2User.getAttributes());
+        String token = jwtTokenProvider.createToken(user.getEmail(),
+                user.getRoles().stream()
+                        .map(a -> a.getRoleName().name())
+                        .toList());
+        return UserPrincipal.create(user, token);
     }
 
     private User registerNewUser(GoogleOAuth2UserInfo oauth2UserInfo) {
