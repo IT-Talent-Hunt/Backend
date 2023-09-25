@@ -1,5 +1,6 @@
 package com.project.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,8 +28,7 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
-    @Enumerated(EnumType.STRING)
-    private User.Speciality speciality;
+    @Column(length = 500)
     private String message;
     @Enumerated(EnumType.STRING)
     private Status status;

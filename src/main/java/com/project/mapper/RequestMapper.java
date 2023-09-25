@@ -11,7 +11,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.stereotype.Component;
 
-@Mapper(uses = {ProjectService.class, UserService.class},
+@Mapper(uses = {ProjectService.class, UserService.class,
+        ProjectMapper.class, UserMapper.class},
         componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.ERROR,
         typeConversionPolicy = ReportingPolicy.ERROR,
@@ -20,9 +21,8 @@ import org.springframework.stereotype.Component;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 @Component
 public interface RequestMapper {
-    @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "project.id", target = "projectId")
-    @Mapping(source = "speciality.value", target = "speciality")
+    @Mapping(source = "user", target = "userResponseDto")
+    @Mapping(source = "project", target = "projectResponseDto")
     RequestResponseDto modelToDto(Request request);
 
     @Mapping(target = "id", ignore = true)
@@ -30,6 +30,5 @@ public interface RequestMapper {
     @Mapping(source = "userId", target = "user")
     @Mapping(source = "projectId", target = "project")
     @Mapping(source = "message", target = "message")
-    @Mapping(source = "speciality", target = "speciality")
     Request dtoToModel(RequestModelRequestDto requestModelRequestDto);
 }

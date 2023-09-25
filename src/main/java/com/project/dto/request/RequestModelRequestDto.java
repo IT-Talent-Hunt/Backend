@@ -9,5 +9,4 @@ public class RequestModelRequestDto {
     private Long userId;
     private Long projectId;
     private String message;
-    private String speciality;
 }
