@@ -5,6 +5,7 @@ import com.project.dto.response.TeamResponseDto;
 import com.project.mapper.TeamMapper;
 import com.project.model.Team;
 import com.project.service.TeamService;
+import com.project.service.UserService;
 import com.project.util.PageRequestUtil;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
     private final TeamService teamService;
     private final TeamMapper teamMapper;
+    private final UserService userService;
     private final PageRequestUtil pageRequestUtil;
 
     @GetMapping
@@ -42,18 +44,18 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    private TeamResponseDto findById(@PathVariable Long id) {
+    private TeamResponseDto getById(@PathVariable Long id) {
         return teamMapper.modelToDto(teamService.findById(id));
     }
 
-    @PostMapping("/{id}/add-speciality")
+    @PutMapping("/{id}/speciality")
     public TeamResponseDto addRequiredSpeciality(@PathVariable Long id,
                                                  @RequestParam String speciality) {
         return teamMapper.modelToDto(
                 teamService.addSpeciality(teamService.findById(id), speciality));
     }
 
-    @PostMapping("/{id}/{userId}")
+    @PutMapping("/{id}/{userId}")
     public TeamResponseDto addUser(@PathVariable Long id,
                                    @PathVariable Long userId) {
         return teamMapper.modelToDto(teamService.addUser(id, userId));
@@ -68,7 +70,7 @@ public class TeamController {
 
     @PutMapping("/{id}")
     public TeamResponseDto update(@PathVariable Long id,
-                                  @Valid @RequestBody TeamRequestDto teamRequestDto) {
+                                  @RequestBody TeamRequestDto teamRequestDto) {
         Team team = teamMapper.dtoToModel(teamRequestDto);
         team.setId(id);
         return teamMapper.modelToDto(teamService.save(team));

@@ -2,9 +2,11 @@ package com.project.mapper;
 
 import com.project.dto.request.TeamRequestDto;
 import com.project.dto.response.TeamResponseDto;
+import com.project.model.Request;
 import com.project.model.Team;
 import com.project.model.User;
 import com.project.service.UserService;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.mapstruct.Mapper;
@@ -27,12 +29,14 @@ public interface TeamMapper {
     @Mapping(source = "requiredSpecialities", target = "requiredSpecialities",
             qualifiedByName = "specialitiesToStrings")
     @Mapping(target = "maxMembers", source = "team", qualifiedByName = "goes")
+    @Mapping(target = "requestIds", source = "requests", qualifiedByName = "requestsToIds")
     TeamResponseDto modelToDto(Team team);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "userIds", target = "users")
     @Mapping(source = "requiredSpecialities", target = "requiredSpecialities",
             qualifiedByName = "specialitiesToEnum")
+    @Mapping(target = "requests", ignore = true)
     Team dtoToModel(TeamRequestDto teamRequestDto);
 
     @Named("goes")
@@ -52,5 +56,16 @@ public interface TeamMapper {
         return specialitiesString.stream()
                 .map(User.Speciality::fromValue)
                 .collect(Collectors.toList());
+    }
+
+    @Named("requestsToIds")
+    default List<Long> requestToIds(List<Request> requests) {
+        if (requests == null) {
+            return Collections.emptyList();
+        }
+        return requests
+                .stream()
+                .map(Request::getId)
+                .toList();
     }
 }
